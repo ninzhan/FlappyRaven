@@ -91,7 +91,7 @@ function update(){
             velocity+=2;
             if(pillars.length>0){
                 for(var pillar in pillars){
-                    if(pillars[pillar].position < 0){
+                    if(pillars[pillar].position < 32){
                         delete pillars[pillar];
                     }else{
                         pillars[pillar].move();
@@ -128,8 +128,8 @@ function render(){
     for(var pillar in pillars){
         pillars[pillar].draw(renderingContext);
     }
-
-    raven[frames%3].draw(renderingContext, 100, 200+localy, 60, 50);
+    
+    raven[frames%4].draw(renderingContext, 100, 200+localy, 60, 50);
 }
 function windowSetup(){
     width = window.innerWidth;
