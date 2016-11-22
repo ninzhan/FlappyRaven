@@ -1,10 +1,10 @@
 /**
  * Created by Joseph on 11/14/16.
  */
-var headSprite, cityBack, cityFront, raven, pillarimg;
+var headSprite, cityBack, cityFront, ravenimages, pillarimg, numbers, restartImg, testimages;
 
 var images = [];
-var locations = ["sheet.png", "city_backgrounds/city_background_clean.png", "city_backgrounds/city_background_night.png", "Industrial-TileSheet.png", "raven.png"];
+var locations = ["sheet.png", "city_backgrounds/city_background_clean.png", "city_backgrounds/city_background_night.png", "Industrial-TileSheet.png", "raven.png", "sheetdf.png", "restart.png"];
 
 function Sprite(image, x, y, width, height){
     this.image = image;
@@ -56,11 +56,30 @@ function initSprites(){
     cityBack = new Sprite(images[1], 0, 0, 8192, 1024);
     cityFront = new Sprite(images[2], 0, 0, 8192, 1024);
     pillarimg = new Sprite(images[3], 0, 32, 32, 191);
+    restartImg = new Sprite(images[6], 0, 0, 200, 40);
 
-    raven = [
-        new Sprite(images[4], 0, 300, 100, 100),
-        new Sprite(images[4], 100, 300, 100, 100),
-        new Sprite(images[4], 200, 300, 100, 100),
-        new Sprite(images[4], 300, 300, 100, 100)
-    ]
+    ravenimages = [
+        new Sprite(images[4], 0, 300, 100, 80),
+        new Sprite(images[4], 100, 300, 100, 80),
+        new Sprite(images[4], 200, 300, 100, 80),
+        new Sprite(images[4], 300, 300, 100, 80)
+    ];
+    // testimages = [
+    //     new Sprite(images[4], 0, 0, 100, 100),
+    //     new Sprite(images[4], 0, 0, 100, 100),
+    //     new Sprite(images[4], 0, 0, 100, 100),
+    //     new Sprite(images[4], 0, 0, 100, 100)
+    // ];
+    numbers = [
+        new Sprite(images[5], 0, 0, 35, 53),
+        new Sprite(images[5], 36, 0, 24, 53),
+        new Sprite(images[5], 60, 0, 30, 53),
+        new Sprite(images[5], 90, 0, 30, 53),
+        new Sprite(images[5], 120, 0, 35, 53),
+        new Sprite(images[5], 155, 0, 33, 53),
+        new Sprite(images[5], 188, 0, 35, 53),
+        new Sprite(images[5], 222, 0, 35, 53),
+        new Sprite(images[5], 256, 0, 35, 53),
+        new Sprite(images[5], 290, 0, 40, 53)
+    ];
 }
