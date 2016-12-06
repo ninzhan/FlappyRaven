@@ -9,8 +9,9 @@ var delta, delta_sprites;
 var pillars = [];
 var score = 0;
 var scoreimg = [];
-var pillargap = 175, pillarheight = 191;
+var pillargap = 200, pillarheight = 191;
 var raven;
+var background1, background2, foreground;
 function main(){
     windowSetup();
     canvasSetup();
@@ -20,26 +21,30 @@ function main(){
     delta = Date.now();
 }
 
-function Pillar(offset, image){
+function Pillar(offset, image, gap){
+    this.gap = gap;
     this.offset = offset;
     this.position = 380;
     this.image = image;
+    this.scored = false;
     this.move = function(){
-        this.position -= 5;
+        this.position += game_speed;
     };
     this.topbottom = this.offset+pillarheight+pillargap;
     this.next = true;
     this.draw = function(renderingContext){
         image.draw(renderingContext, this.position, this.offset, "default","default");
-        image.draw(renderingContext, this.position, this.offset+pillarheight+pillargap, "default", "default");
+        image.draw(renderingContext, this.position, this.offset+pillarheight+this.gap, "default", "default");
     }
 }
 
 function loadGraphics(){
     loadImages(function(){
         initSprites();
-        pillars[0]= new Pillar(randomPillarOffset(), pillarimg);
         raven = new Raven();
+        background1 = new Background(0, cityBack.calcWidth(500), cityBack);
+        background2 = new Background(cityBack.calcWidth(500), cityBack.calcWidth(500), cityBack);
+        foreground = new Background(0, cityFront.calcWidth(1000), cityFront);
         gameLoop();
     }, 0);
 }
@@ -65,9 +70,7 @@ function keyDownHandler(e){
         if(!gamefail){
             raven.resetVelocity(-20);
         }
-
     }
-
 }
 function clickHandler(e){
     console.log("clicked");
@@ -99,7 +102,7 @@ function Raven(){
         this.position += this.velocity;
     };
     this.detectCollisions = function(pillar){
-        if(pillar.position > this.col-30 && pillar.position < this.col+50 && (this.position < pillar.offset+191 || this.position > pillar.offset+pillarheight+pillargap-30)){
+        if(pillar.position > this.col-30 && pillar.position < this.col+50 && (this.position < pillar.offset+191 || this.position > pillar.offset+pillarheight+pillar.gap-30)){
             return true;
         }
 
@@ -121,43 +124,79 @@ function checkFail(){
 }
 var gamestart = false;
 var gamefail = false;
+function Background(position, width, image){
+    this.position = position;
+    this.width = width;
+    this.image = image;
+    this.move = function (n) {
+        this.position += n;
+    };
+    this.reset = function (n) {
+        this.position = n;
+    }
+}
+var back_speed = -2;
+var game_speed = -5;
 function update(){
     if(delta < (Date.now()-20)){
         if(!gamestart){
             raven.position += Math.cos(frames);
         }
         if(!gamefail){
-            backx-=5;
-            frontx-=2;
-            delta = Date.now();
+            if(background1.position < -background1.width){
+                background1.reset(background2.width);
+            }
+            if(background2.position < -background2.width){
+                background2.reset(background1.width);
+            }
+            background1.move(back_speed);
+            background2.move(back_speed);
+            if(foreground.position < -foreground.width){
+                foreground.reset(380);
+            }
+            foreground.move(game_speed);
+
         }
         if(gamestart && !gamefail){
             raven.velot(2);
             if(pillars.length>0){
                 for(var pillar in pillars){
-                    if(pillars[pillar].position < -32){
+                    pillars[pillar].move();
+                    if(pillars[pillar].position < raven.col-pillars[pillar].image.width && !pillars[pillar].scored){
                         scoreimg = [];
-                        delete pillars[pillar];
                         score ++;
                         var scorest = String(score).split("");
                         console.log(scorest);
                         for(var x in scorest){
                             scoreimg[scoreimg.length] = numbers[Number(scorest[x])];
                         }
+                        pillars[pillar].scored = true;
+                        if(score%10 == 0){
+                            game_speed -= 2;
+                            back_speed --;
+                            pillargap -= 5;
+                        }
                     }else{
-                        pillars[pillar].move();
                         if(pillars[pillar].position < 100 && pillars[pillar].next){
-                            pillars[pillars.length] = new Pillar(randomPillarOffset(), pillarimg);
+                            pillars[pillars.length] = new Pillar(randomPillarOffset(), pillarimg, pillargap);
                             pillars[pillar].next = false;
                         }
                     }
 
+                    if(pillars[pillar].position < -32){
+                        delete pillars[pillar];
+                    }
+
                 }
+            }else{
+                pillars[0] = new Pillar(randomPillarOffset(), pillarimg, pillargap);
+                console.log(pillargap);
             }
 
 
         }
         raven.move();
+        delta = Date.now();
     }
 
     if(delta_sprites < (Date.now()-80)){
@@ -173,24 +212,11 @@ function update(){
         raven.velocity+=2;
     }
 }
-var backy = 0, backx = 0;
-var fronty = 0, frontx = -1000;
-function restart(){
-    frames = 0;
-    gamestart = false;
-    gamefail = false;
-    pillars = [];
-    scoreimg = [];
-    score = 0;
-    raven.position = 200;
-    raven.velocity = 0;
-    pillars[0]= new Pillar(randomPillarOffset(), pillarimg);
-}
 function render(){
     renderingContext.clearRect(0, 0, 380, 430);
-    cityFront.draw(renderingContext, frontx, fronty-70, cityFront.calcWidth(500), 500);
-    cityFront.draw(renderingContext, frontx+cityFront.calcWidth(500), fronty-70, cityFront.calcWidth(500), 500);
-    cityBack.draw(renderingContext, backx, backy-500, cityBack.calcWidth(1000),1000);
+    background1.image.draw(renderingContext, background1.position, 0, background1.image.calcWidth(500), 500);
+    background2.image.draw(renderingContext, background2.position, 0, background2.image.calcWidth(500), 500);
+    foreground.image.draw(renderingContext, foreground.position, -500, foreground.image.calcWidth(1000),1000);
 
     for(var pillar in pillars){
         pillars[pillar].draw(renderingContext);
@@ -215,6 +241,20 @@ function render(){
         restartImg.draw(renderingContext, 90, 300, "default", "default");
     }
 }
+var backy = 0, backx = 0;
+var fronty = 0, frontx = -1000;
+function restart(){
+    frames = 0;
+    gamestart = false;
+    gamefail = false;
+    pillars = [];
+    scoreimg = [];
+    score = 0;
+    raven.position = 200;
+    raven.velocity = 0;
+    game_speed = -5;
+    back_speed = -2;
+}
 function windowSetup(){
     width = window.innerWidth;
     height = window.innerHeight;
@@ -230,4 +270,7 @@ function canvasSetup(){
     canvas.height = height;
     renderingContext = canvas.getContext("2d");
     document.body.appendChild(canvas);
+    var text = document.createElement("p");
+    text.innerHTML = "Art by Revangale, Alucard and tebruno99 on <a href = 'https://opengameart.org'>Open Game Art</a>";
+    document.body.appendChild(text);
 }

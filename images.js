@@ -1,10 +1,10 @@
 /**
  * Created by Joseph on 11/14/16.
  */
-var headSprite, cityBack, cityFront, ravenimages, pillarimg, numbers, restartImg, testimages;
+var headSprite, cityFront, cityBack, ravenimages, pillarimg, numbers, restartImg, testimages;
 
 var images = [];
-var locations = ["sheet.png", "city_backgrounds/city_background_clean.png", "city_backgrounds/city_background_night.png", "Industrial-TileSheet.png", "raven.png", "sheetdf.png", "restart.png"];
+var locations = ["sheet.png", "city_backgrounds/city_background_night.png", "city_backgrounds/city_background_clean.png", "Industrial-TileSheet.png", "raven.png", "sheetdf.png", "restart.png"];
 
 function Sprite(image, x, y, width, height){
     this.image = image;
@@ -76,10 +76,10 @@ function initSprites(){
         new Sprite(images[5], 60, 0, 30, 53),
         new Sprite(images[5], 90, 0, 30, 53),
         new Sprite(images[5], 120, 0, 35, 53),
-        new Sprite(images[5], 155, 0, 33, 53),
+        new Sprite(images[5], 156, 0, 32, 53),
         new Sprite(images[5], 188, 0, 35, 53),
         new Sprite(images[5], 222, 0, 35, 53),
-        new Sprite(images[5], 256, 0, 35, 53),
-        new Sprite(images[5], 290, 0, 40, 53)
+        new Sprite(images[5], 257, 0, 34, 53),
+        new Sprite(images[5], 292, 0, 38, 53)
     ];
 }
