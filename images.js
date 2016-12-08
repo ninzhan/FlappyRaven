@@ -1,10 +1,17 @@
 /**
  * Created by Joseph on 11/14/16.
  */
-var headSprite, cityFront, cityBack, ravenimages, pillarimg, numbers, restartImg, testimages;
+var headSprite, cityFront, cityBack, ravenimages, pillarimg, numbers, restartImg, testimages, high;
 
 var images = [];
-var locations = ["sheet.png", "city_backgrounds/city_background_night.png", "city_backgrounds/city_background_clean.png", "Industrial-TileSheet.png", "raven.png", "sheetdf.png", "restart.png"];
+var locations = ["sheet.png",
+    "city_backgrounds/city_background_night.png",
+    "city_backgrounds/city_background_clean.png",
+    "Industrial-TileSheet.png",
+    "raven.png",
+    "sheetdf.png",
+    "restart.png",
+    "high.png"];
 
 function Sprite(image, x, y, width, height){
     this.image = image;
@@ -82,4 +89,5 @@ function initSprites(){
         new Sprite(images[5], 257, 0, 34, 53),
         new Sprite(images[5], 292, 0, 38, 53)
     ];
+    high = new Sprite(images[7], 0, 0, 200,100);
 }
